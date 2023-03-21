@@ -1,15 +1,14 @@
 #pragma once
 #include <string>
+#include <istream>
 #include <fstream>
-
-class Complex {
-public:
-
-private:
-
+#include <ostream>
+enum class DisplayType {
+	
 };
 
-
+class Complex {
+};
 
 
 

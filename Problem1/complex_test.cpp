@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <limits>
+#include <math.h>
 
 #define RED "\033[0;31m"
 #define CYAN "\033[0;36m"
@@ -45,6 +46,7 @@ typedef enum {
 	Test_Getters_Setters,
 	Test_Equals,
 	Test_Stream_Operators,
+	Test_Display_Type,
 	Num_Tests
 }TestCases;
 
@@ -93,6 +95,9 @@ std::string testName(int test) {
 		return "Test_Equals";
 	if (test == Test_Stream_Operators)
 		return "Test_Stream_Operators";
+	if (test == Test_Display_Type) {
+		return "Test_Display_Type";
+	}
 	return "";
 }
 
@@ -232,6 +237,7 @@ int run_test(int test) {
 		{
 			Complex c1 = Complex(10, 0);
 			c1.multiply(0);
+			
 			if (c1.getReal() != 0 || c1.getImag() != 0)
 				return 1;
 		}
@@ -434,39 +440,101 @@ int run_test(int test) {
 		return 0;
 	}
 
-	case Test_Stream_Operators: {
-
-		
+	case Test_Display_Type: {
+		Complex::setDisplayType(DisplayType::POLAR_FORM);
 		{
 			ostringstream sstr;
 			Complex c;
 			sstr << c;
-			if (c.toString() != "0")
+			std::string expected{ "0" };
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
 				return 1;
+			}
 		}
 
 		{
 			ostringstream sstr;
-			Complex c{10, 20};
+			Complex c(sqrt(3), 1.0f);
 			sstr << c;
-			if (c.toString() != "10.00+20.00i")
+
+			string expected{ "2.00*(cos(30.00) + i*sin(30.00))" };
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
 				return 2;
+			}
 		}
 
 		{
 			ostringstream sstr;
 			Complex c{ 10, -20 };
 			sstr << c;
-			if (c.toString() != "10.00-20.00i")
+			string expected{ "22.36*(cos(-63.43) + i*sin(-63.43))" };
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
+				return 3;
+			}
+		}
+
+		{
+			ostringstream sstr;
+			Complex c{ 10, 0 };
+			sstr << c;
+			std::string expected = "10.00*(cos(0.00) + i*sin(0.00))";
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
+				return 4;
+			}
+		}
+
+
+		return 0;
+	}
+
+	case Test_Stream_Operators: {
+		Complex::setDisplayType(DisplayType::RECTANGULAR_FORM);
+		{
+			ostringstream sstr;
+			Complex c;
+			sstr << c;
+			std::string expected{ "0" };
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
+				return 1;
+			}
+		}
+
+		{
+			ostringstream sstr;
+			Complex c{10, 20};
+			sstr << c;
+			std::string expected = "10.00+20.00i";
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
 				return 2;
+			}
+		}
+
+		{
+			ostringstream sstr;
+			Complex c{ 10, -20 };
+			sstr << c;
+			string expected{ "10.00-20.00i" };
+			if (c.toString() != "10.00-20.00i") {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
+				return 3;
+			}
 		}
 
 		{
 			ostringstream sstr;
 			Complex c{ -10, -20 };
 			sstr << c;
-			if (c.toString() != "-10.00-20.00i")
-				return 3;
+			std::string expected = "-10.00-20.00i";
+			if (c.toString() != expected) {
+				cout << "Expected " << expected << ", but got " << c.toString() << endl;
+				return 4;
+			}
 		}
 
 		{
@@ -475,7 +543,7 @@ int run_test(int test) {
 			Complex c;
 			sstr >> c;
 			if (cmpf(c.getReal(), -10) == false || cmpf(c.getImag(), 20) == false)
-				return 4;
+				return 5;
 		}
 
 		{
@@ -484,7 +552,7 @@ int run_test(int test) {
 			Complex c;
 			sstr >> c;
 			if (cmpf(c.getReal(), 0) == false || cmpf(c.getImag(), 0) == false)
-				return 5;
+				return 6;
 		}
 
 		{
@@ -592,8 +660,8 @@ void run_complex_tests(bool verbose) {
 
 	disable_exit_handler = 1;
 
-	short totalScore = testsPassed * 3;
-	short maxScore = Num_Tests * 3;
+	short totalScore = testsPassed ;
+	short maxScore = Num_Tests ;
 	if (verbose) {
 		if (testStatus != 255)
 			cout << "\nYou passed " << unsigned(testsPassed) << " out of " << Num_Tests << " tests" << endl<<endl;
@@ -605,7 +673,7 @@ void run_complex_tests(bool verbose) {
 	else {
 		if (testStatus == 255)
 			totalScore = CHARITY;
-		cout << totalScore << endl;
+		cout << "Grade: "<<totalScore / (float)maxScore * 10 << endl;
 	}
 }
 #endif

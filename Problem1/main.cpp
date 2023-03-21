@@ -1,15 +1,13 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
+#define _CRT_SECURE_DEBUG_NO_WARNINGS
+#include <iostream>
+using namespace std;
+
 
 #include "complex_test.h"
 
 int main(int argc, char** argv) {
-
 #if ENABLE_TESTS > 0
-	run_complex_tests(true);
+	run_complex_tests(false);
 #endif
-	// TODO your code here
-	
 	return 0;
 }

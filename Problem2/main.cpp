@@ -36,7 +36,7 @@ int main() {
         crt = computeNthFibonacci(n);
         if (crt < prev)
             isOverflow = true;
-        cout << setw(5) << n << "\t" << setw(70)<<crt<<"\t"<<(isOverflow ? string(RED)+string("OVERFLOW !!!! ")+string(NC) : "") << endl;
+        cout << setw(5) << n << "\t" << setw(20)<<crt<<"\t"<<(isOverflow ? string(RED)+string("OVERFLOW !!!! ")+string(NC) : "") << endl;
 
     }
 	return 0;
